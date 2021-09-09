@@ -6,7 +6,8 @@ import * as yup from 'yup'
 import axios from 'axios'
 
 import {
-  withRouter
+  withRouter,
+  Link
 } from "react-router-dom";
 
 
@@ -16,7 +17,7 @@ import { Container, Box, Input, Button, Heading, Stack,
 class Login extends React.Component {
   
   render() {
-     const validationSchema = yup.object().shape({
+    const validationSchema = yup.object().shape({
       email: yup.string().email('Email inválido').required('Campo obrigatório.'),
       password: yup.string().required('Campo obrigatório.')
     })
@@ -28,12 +29,12 @@ class Login extends React.Component {
           "emailAddress": values.email,
           "password": values.password
         })
-      
-        console.log('props: ', this.props)
+
         if (res.data.token) {
-          alert("LOGIN CORRETO")
+          localStorage.setItem('token', res.data.token);
+          this.props.history.push('/schedule')
         } else {
-          alert("LOGIN ERRADO") 
+          alert("Login incorreto. Tente novamente.")
         }
       },
       validationSchema,
@@ -74,12 +75,12 @@ class Login extends React.Component {
             </Box>
 
             <Stack spacing={4} p={4} direction="row" align="center">
-              <Button type="submit" onClick={handleSubmit} isLoading={isSubmitting}>
+              <Button onClick={handleSubmit} isLoading={isSubmitting}>
                   Login
               </Button>
 
-              <Button type="submit">
-                  Criar Conta
+              <Button>
+                <Link to='/signup' >Criar conta </Link>
               </Button>
 
             </Stack>
