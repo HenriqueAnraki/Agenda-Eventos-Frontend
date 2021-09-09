@@ -25,16 +25,20 @@ class SignUp extends React.Component {
     //const formik = useFormik({
     const formikProps = {
       onSubmit: async (values, form) => {
-        const res = await axios.post('http://localhost:4000/user', {
-          "emailAddress": values.email,
-          "password": values.password
-        })
+        try {
+          const res = await axios.post('http://localhost:4000/user', {
+            "emailAddress": values.email,
+            "password": values.password
+          })
 
-        if (res.data.id) {
-          alert("Conta criada com sucesso.")
-          this.props.history.push('/')
-        } else {
-          alert(res.data)
+          if (res.data.id) {
+            alert("Conta criada com sucesso.")
+            this.props.history.push('/')
+          } else {
+            alert(res.data)
+          }
+        } catch (err) {
+          alert(err.response.data)
         }
       },
       validationSchema,
@@ -79,9 +83,11 @@ class SignUp extends React.Component {
                   Cadastrar
               </Button>
 
-              <Button>
-                <Link to='/' >Cancelar </Link>
-              </Button>
+              <Link to='/' >
+                <Button>
+                  Cancelar
+                </Button>
+              </Link>
 
             </Stack>
 

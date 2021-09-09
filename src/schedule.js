@@ -4,7 +4,8 @@ import axios from 'axios'
 import date from 'date-and-time'
 
 import {
-  withRouter
+  withRouter,
+  Link
 } from "react-router-dom";
 
 
@@ -22,9 +23,14 @@ function Event({ value, ...props }) {
       </Box>
 
       <Stack spacing={4} direction="row" align="center">
-        <Button>
-          Alterar
-        </Button>
+      <Link to={{
+          pathname: '/event',
+          state: value
+        }}>
+          <Button>
+            Alterar
+          </Button>
+        </Link>
 
         <Button>
           Remover
@@ -43,22 +49,36 @@ class Schedule extends React.Component {
   }
 
   componentDidMount() {
-    const getSchedule = async () => {
-      const token = localStorage.getItem('token')
-      const { data } = await  axios({
-        method: 'get',
-        url: 'http://localhost:4000',
-        headers: {
-            Authorization: `${token}`
-        }
-      })
-      console.log('schedule: ', data)
-      this.setState({
-        schedule: data
-      });
-    };
+    // usar para caregar info do eento a ser editado
+    const token = localStorage.getItem('token')
 
-    getSchedule();
+    const getSchedule = async () => {
+      try {
+        const { data } = await axios({
+          method: 'get',
+          url: 'http://localhost:4000',
+          headers: {
+              Authorization: `${token}`
+          }
+        })
+        console.log('schedule: ', data)
+        this.setState({
+          schedule: data
+        });
+      } catch (err) {
+        alert(err.response.data)
+        if (err.response.status === 403) {
+          localStorage.removeItem('token')
+          this.props.history.push('/')
+        }
+      }
+    };
+    
+    if (!token) {
+      this.props.history.push('/')
+    } else {
+      getSchedule();
+    }
   }
 
   render() {
@@ -78,7 +98,11 @@ class Schedule extends React.Component {
             <Box>
               <Heading mb={4}>AGENDA</Heading>
               <Box mb={4}>
-                <Button>Adicionar evento</Button>
+                <Link to='/event' >
+                  <Button>
+                    Adicionar evento
+                  </Button>
+                </Link>
               </Box>
             </Box>
 

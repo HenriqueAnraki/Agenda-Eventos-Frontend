@@ -21,6 +21,7 @@ import { ChakraProvider,
 import Login from './login'
 import SignUp from './signup'
 import Schedule from './schedule'
+import Event from './events'
 
 
 // ========================================
@@ -33,6 +34,7 @@ ReactDOM.render(
         <Route path="/" exact={true} component={Login} />
         <Route path="/signup" component={SignUp} />
         <Route path="/schedule" component={Schedule} />
+        <Route path="/event" component={Event} />
       </Switch>
     </ChakraProvider>
   </Router>,

@@ -29,16 +29,21 @@ class Login extends React.Component {
     //const formik = useFormik({
     const formikProps = {
       onSubmit: async (values, form) => {
-        const res = await axios.post('http://localhost:4000/login', {
-          "emailAddress": values.email,
-          "password": values.password
-        })
+        try {
+          const res = await axios.post('http://localhost:4000/login', {
+            "emailAddress": values.email,
+            "password": values.password
+          })
 
-        if (res.data.token) {
-          localStorage.setItem('token', 'Bearer ' + res.data.token);
-          this.props.history.push('/schedule')
-        } else {
-          alert("Login incorreto. Tente novamente." + res.data)
+          if (res.data.token) {
+            localStorage.setItem('token', 'Bearer ' + res.data.token);
+            this.props.history.push('/schedule')
+          } else {
+            console.log('data: ', res.data)
+            alert("Login incorreto. Tente novamente.")
+          }
+        } catch (err) {
+          alert(err.response.data)
         }
       },
       validationSchema,
@@ -83,9 +88,11 @@ class Login extends React.Component {
                   Login
               </Button>
 
-              <Button>
-                <Link to='/signup' >Criar conta </Link>
-              </Button>
+              <Link to='/signup' >
+                <Button>
+                  Criar conta
+                </Button>
+              </Link>
 
             </Stack>
 
