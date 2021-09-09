@@ -11,12 +11,17 @@ import {
 } from "react-router-dom";
 
 
-import { Container, Box, Input, Button, Heading, Stack,
-  FormControl, FormLabel, FormHelperText } from "@chakra-ui/react"
-
-  // [todo] verificar se token existe e pular tela de login
-  // como tratar caso token esteja expirado?
-  // [todo] logout
+import {
+  Container,
+  Box,
+  Input,
+  Button,
+  Heading,
+  Stack,
+  FormControl,
+  FormLabel,
+  FormHelperText
+} from "@chakra-ui/react"
 
 class Login extends React.Component {
   
@@ -39,7 +44,6 @@ class Login extends React.Component {
             localStorage.setItem('token', 'Bearer ' + res.data.token);
             this.props.history.push('/schedule')
           } else {
-            console.log('data: ', res.data)
             alert("Login incorreto. Tente novamente.")
           }
         } catch (err) {
@@ -103,16 +107,4 @@ class Login extends React.Component {
   }
 }
 
-// ========================================
-
-// const LoginWithRouter = withRouter(Login);
 export default withRouter(Login)
-
-// ReactDOM.render(
-//   <Router>
-//     <ChakraProvider>
-//       <LoginWithRouter />
-//     </ChakraProvider>
-//   </Router>,
-//   document.getElementById('root')
-// );

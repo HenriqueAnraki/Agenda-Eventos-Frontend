@@ -10,46 +10,29 @@ import {
   withRouter
 } from "react-router-dom";
 
-
-import { Container, Box, Input, Button, Heading, Stack, Textarea, Text,
-  FormControl, FormLabel, FormHelperText } from "@chakra-ui/react"
-
-
-  // { "authorization": localStorage.getgetItem('token')}
+import {
+  Container,
+  Box,
+  Input,
+  Button,
+  Heading,
+  Textarea,
+  Text,
+  FormControl,
+  FormLabel,
+  FormHelperText
+} from "@chakra-ui/react"
 
 
 class Schedule extends React.Component {
 
   componentDidMount() {
-    // usar para caregar info do eento a ser editado
     const token = localStorage.getItem('token')
-
-    // not a request? Get data from the other page?
-    const getEventToEdit = async () => {
-      const { data } = await  axios({
-        method: 'get',
-        url: 'http://localhost:4000',
-        headers: {
-            Authorization: `${token}`
-        }
-      })
-      console.log('schedule: ', data)
-      this.setState({
-        schedule: data
-      });
-    };
-    
-    console.log('props?? ', this.props.location.state)
-
     if (!token) this.props.history.push('/')
-    else {
-      // getEventToEdit();
-    }
   }
   
   render() {
     const validationSchema = yup.object().shape({
-      // how to validate date and time?
       description: yup.string().required('Campo obrigatório.'),
       beginTime: yup.string().required('Campo obrigatório.'),
       beginDate: yup.date().required('Campo obrigatório.'),
@@ -59,15 +42,16 @@ class Schedule extends React.Component {
 
     const valuesToUpdate = this.props.location.state
   
-    //const formik = useFormik({
     const formikProps = {
       onSubmit: async (values, form) => {
-        const token = localStorage.getItem('token')
+        const token = localStorage.getItem('token');
 
         try {
+          const urlComplement = valuesToUpdate ? valuesToUpdate.id : '';
+
           const res = await axios({
             method: valuesToUpdate ? 'patch' : 'post',
-            url: 'http://localhost:4000/' + valuesToUpdate ? valuesToUpdate.id : '',
+            url: 'http://localhost:4000/' + urlComplement,
             headers: {
                 Authorization: `${token}`
             },
@@ -76,20 +60,19 @@ class Schedule extends React.Component {
               begin: `${values.beginDate} ${values.beginTime}:00`,
               end: `${values.endDate} ${values.endTime}:00`
             }
-          })
-  
-          console.log('res.data: ', res.data)
+          });
   
           if (res.data.id) {
-            this.props.history.push('/schedule')
+            this.props.history.push('/schedule');
           } else {
-            alert(res.data)
+            alert(res.data);
           }
         } catch (err) {
-          alert(err.response.data)
+          alert(err.response ? err.response.data : err);
+
           if (err.response.status === 403) {
-            localStorage.removeItem('token')
-            this.props.history.push('/')
+            localStorage.removeItem('token');
+            this.props.history.push('/');
           }
         }
       },
@@ -101,7 +84,7 @@ class Schedule extends React.Component {
         endTime: valuesToUpdate ? valuesToUpdate.end.slice(11, 16): '',
         endDate: valuesToUpdate ? valuesToUpdate.end.slice(0, 10): ''
       }
-    }
+    };
 
     return (
       <Formik {...formikProps}>

@@ -18,7 +18,6 @@ class Event extends React.Component {
 
     const formikProps = {
       onSubmit: async (values, form) => {
-        console.log('values: ', values)
         const token = localStorage.getItem('token')
         try {
           const res = await axios({
@@ -28,8 +27,6 @@ class Event extends React.Component {
                 Authorization: `${token}`
             }
           }) 
-
-          console.log('res.data: ', res.data)
 
           if (res.data.deletedRows > 0) {
             alert("Evento removido.")
@@ -91,6 +88,11 @@ class Schedule extends React.Component {
     };
   }
 
+  logout(history) {
+    localStorage.removeItem('token')
+    history.push('/')
+  }
+
   componentDidMount() {
     const token = localStorage.getItem('token')
 
@@ -103,7 +105,7 @@ class Schedule extends React.Component {
               Authorization: `${token}`
           }
         })
-        console.log('schedule: ', data)
+
         this.setState({
           schedule: data
         });
@@ -127,19 +129,22 @@ class Schedule extends React.Component {
     return (
           <Container p={1} centerContent>
             <Box>
-              <Heading mb={4}>AGENDA</Heading>
+              <Heading mb={4} align="center">AGENDA</Heading>
               <Box mb={4}>
                 <Link to='/event' >
                   <Button>
                     Adicionar evento
                   </Button>
                 </Link>
+                <Button ml={4} onClick={() => this.logout(this.props.history)}>
+                    Logout
+                </Button>
               </Box>
             </Box>
 
             { this.state.schedule ? this.state.schedule.map(value => {
                 return <Event value={value} key={value.id} mt={4}/>
-            }) : console.log('nope')
+            }) : ''
             }
           </Container>
     );
