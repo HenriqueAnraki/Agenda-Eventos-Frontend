@@ -30,10 +30,11 @@ class SignUp extends React.Component {
           "password": values.password
         })
 
-        if (res.data.token) {
-          this.props.history.push('/schedule')
+        if (res.data.id) {
+          alert("Conta criada com sucesso.")
+          this.props.history.push('/')
         } else {
-          alert("LOGIN ERRADO")
+          alert(res.data)
         }
       },
       validationSchema,

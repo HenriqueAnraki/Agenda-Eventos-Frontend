@@ -14,6 +14,10 @@ import {
 import { Container, Box, Input, Button, Heading, Stack,
   FormControl, FormLabel, FormHelperText } from "@chakra-ui/react"
 
+  // [todo] verificar se token existe e pular tela de login
+  // como tratar caso token esteja expirado?
+  // [todo] logout
+
 class Login extends React.Component {
   
   render() {
@@ -34,7 +38,7 @@ class Login extends React.Component {
           localStorage.setItem('token', res.data.token);
           this.props.history.push('/schedule')
         } else {
-          alert("Login incorreto. Tente novamente.")
+          alert("Login incorreto. Tente novamente." + res.data)
         }
       },
       validationSchema,
