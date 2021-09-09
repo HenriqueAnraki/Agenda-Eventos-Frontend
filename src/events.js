@@ -155,6 +155,7 @@ class Schedule extends React.Component {
               <Box mt={4}>
                   <Button width="100%" onClick={handleSubmit} isLoading={isSubmitting}>Salvar</Button>
               </Box>
+              {/*[todo] adiconar bnotaão de cancelçar/voltar*/}
             </Box>
 
 
