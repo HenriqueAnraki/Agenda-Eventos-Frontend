@@ -35,7 +35,7 @@ class Login extends React.Component {
         })
 
         if (res.data.token) {
-          localStorage.setItem('token', res.data.token);
+          localStorage.setItem('token', 'Bearer ' + res.data.token);
           this.props.history.push('/schedule')
         } else {
           alert("Login incorreto. Tente novamente." + res.data)
