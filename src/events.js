@@ -6,6 +6,7 @@ import * as yup from 'yup'
 import axios from 'axios'
 
 import {
+  Link,
   withRouter
 } from "react-router-dom";
 
@@ -55,6 +56,8 @@ class Schedule extends React.Component {
       endTime: yup.string().required('Campo obrigatório.'),
       endDate: yup.date().required('Campo obrigatório.')
     })
+
+    const valuesToUpdate = this.props.location.state
   
     //const formik = useFormik({
     const formikProps = {
@@ -63,8 +66,8 @@ class Schedule extends React.Component {
 
         try {
           const res = await axios({
-            method: 'post',
-            url: 'http://localhost:4000/',
+            method: valuesToUpdate ? 'patch' : 'post',
+            url: 'http://localhost:4000/' + valuesToUpdate ? valuesToUpdate.id : '',
             headers: {
                 Authorization: `${token}`
             },
@@ -92,11 +95,11 @@ class Schedule extends React.Component {
       },
       validationSchema,
       initialValues: {
-        description: '',
-        beginTime: '',
-        beginDate: '',
-        endTime: '',
-        endDate: ''
+        description:  valuesToUpdate ? valuesToUpdate.description: '',
+        beginTime: valuesToUpdate ? valuesToUpdate.begin.slice(11, 16): '',
+        beginDate: valuesToUpdate ? valuesToUpdate.begin.slice(0, 10): '',
+        endTime: valuesToUpdate ? valuesToUpdate.end.slice(11, 16): '',
+        endDate: valuesToUpdate ? valuesToUpdate.end.slice(0, 10): ''
       }
     }
 
@@ -155,7 +158,11 @@ class Schedule extends React.Component {
               <Box mt={4}>
                   <Button width="100%" onClick={handleSubmit} isLoading={isSubmitting}>Salvar</Button>
               </Box>
-              {/*[todo] adiconar bnotaão de cancelçar/voltar*/}
+              <Link to='/schedule'>
+                <Box mt={4}>
+                    <Button width="100%">Cancelar</Button>
+                </Box>
+              </Link>
             </Box>
 
 
